@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import {
-  themeQuartz,
-  type ColDef,
-  type ICellRendererParams,
-} from "ag-grid-community";
+import { themeQuartz, type ColDef } from "ag-grid-community";
 import Data from "@/data.json";
 import type { Employee } from "@/lib/types";
-import { Briefcase } from "lucide-react";
-import { departmentConfig } from "@/lib/config";
-import { Badge } from "./ui/badge";
+
+import FullNameRenderer from "./cellRenderers/FullNameRenderer";
+import DepartmentRenderer from "./cellRenderers/DepartmentRenderer";
+import RatingRenderer from "./cellRenderers/RatingRenderer";
+import StatusRenderer from "./cellRenderers/StatusRenderer";
+import SkillsRenderer from "./cellRenderers/SkillsRenderer";
 
 const Dashboard = () => {
   const employeeData: Employee[] = Data;
@@ -32,32 +31,7 @@ const Dashboard = () => {
       minWidth: 180,
       valueGetter: (params) =>
         `${params.data?.firstName} ${params.data?.lastName}`,
-      cellRenderer: (params: ICellRendererParams<Employee>) => {
-        return (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              height: "100%",
-            }}>
-            <img
-              src="https://www.photopacks.ai/static/personas/examples/casual_4.jpeg"
-              alt="profile"
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
-            />
-
-            <span>
-              {params.data?.firstName} {params.data?.lastName}
-            </span>
-          </div>
-        );
-      },
+      cellRenderer: FullNameRenderer,
     },
 
     {
@@ -76,46 +50,7 @@ const Dashboard = () => {
       sortable: true,
       width: 150,
       minWidth: 150,
-      cellRenderer: (params: ICellRendererParams<Employee>) => {
-        const dept = params.value;
-
-        const config = departmentConfig[dept] || {
-          color: "#374151",
-          bg: "#f3f4f6",
-          icon: <Briefcase size={14} />,
-        };
-
-        return (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              // gap: "8px",
-
-              height: "100%",
-            }}>
-            <div
-              style={{
-                height: "30px",
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "6px",
-                padding: "4px 10px",
-                borderRadius: "10px",
-                // backgroundColor: config.bg,
-                // color: config.color,
-                fontWeight: 600,
-                fontSize: "12px",
-                border: `3px solid ${config.color}`,
-              }}>
-              {config.icon}
-              <span>{dept}</span>
-            </div>
-          </div>
-        );
-      },
+      cellRenderer: DepartmentRenderer,
     },
 
     {
@@ -157,18 +92,7 @@ const Dashboard = () => {
       sortable: true,
       filter: true,
       width: 120,
-      cellRenderer: (params: ICellRendererParams<Employee>) => (
-        <span
-          style={{
-            padding: "4px 10px",
-            borderRadius: "8px",
-            backgroundColor: params.value >= 4 ? "#dcfce7" : "#fee2e2",
-            color: params.value >= 4 ? "#166534" : "#991b1b",
-            fontWeight: "bold",
-          }}>
-          ⭐ {params.value}
-        </span>
-      ),
+      cellRenderer: RatingRenderer,
     },
 
     {
@@ -190,28 +114,7 @@ const Dashboard = () => {
       headerName: "STATUE",
       sortable: true,
       width: 120,
-      cellRenderer: (params: ICellRendererParams<Employee>) => (
-        <div>
-          {params.value ? (
-            <Badge
-              variant="outline"
-              className="
-            bg-green-50
-            text-green-700
-            border-green-700
-            dark:bg-green-950
-            dark:text-green-300">
-              Active
-            </Badge>
-          ) : (
-            <Badge
-              variant="outline"
-              className="bg-red-50 border-red-700 text-red-700 dark:bg-red-950  dark:text-red-300">
-              Inactive
-            </Badge>
-          )}
-        </div>
-      ),
+      cellRenderer: StatusRenderer,
     },
 
     {
@@ -221,24 +124,7 @@ const Dashboard = () => {
       filter: true,
       minWidth: 250,
       width: 250,
-      cellRenderer: (params: ICellRendererParams<Employee>) => (
-        <div>
-          {params.value.map((skill: string, index: number) => (
-            <span
-              key={index}
-              style={{
-                marginLeft: "5px",
-                background: "#e0e7ff",
-                color: "#3730a3",
-                padding: "4px 8px",
-                borderRadius: "12px",
-                fontSize: "12px",
-              }}>
-              {skill}
-            </span>
-          ))}
-        </div>
-      ),
+      cellRenderer: SkillsRenderer,
     },
   ]);
 
