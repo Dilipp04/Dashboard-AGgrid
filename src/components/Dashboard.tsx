@@ -9,6 +9,7 @@ import Data from "@/data.json";
 import type { Employee } from "@/lib/types";
 import { Briefcase } from "lucide-react";
 import { departmentConfig } from "@/lib/config";
+import { Badge } from "./ui/badge";
 
 const Dashboard = () => {
   const employeeData: Employee[] = Data;
@@ -190,16 +191,26 @@ const Dashboard = () => {
       sortable: true,
       width: 120,
       cellRenderer: (params: ICellRendererParams<Employee>) => (
-        <span
-          style={{
-            padding: "4px 10px",
-            borderRadius: "8px",
-            backgroundColor: params.value ? "#dcfce7" : "#fee2e2",
-            color: params.value ? "#166534" : "#991b1b",
-            fontWeight: "bold",
-          }}>
-          {params.value ? "Active" : "Inactive"}
-        </span>
+        <div>
+          {params.value ? (
+            <Badge
+              variant="outline"
+              className="
+            bg-green-50
+            text-green-700
+            border-green-700
+            dark:bg-green-950
+            dark:text-green-300">
+              Active
+            </Badge>
+          ) : (
+            <Badge
+              variant="outline"
+              className="bg-red-50 border-red-700 text-red-700 dark:bg-red-950  dark:text-red-300">
+              Inactive
+            </Badge>
+          )}
+        </div>
       ),
     },
 
